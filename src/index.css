@@ -1,0 +1,32 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-bg-primary text-text-primary font-body antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  ::selection {
+    @apply bg-accent/30;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply bg-bg-secondary/80 backdrop-blur-md border border-border rounded-xl;
+  }
+
+  .panel-elevated {
+    @apply bg-bg-elevated border border-border rounded-xl shadow-lg;
+  }
+}
