@@ -39,6 +39,8 @@ The project has moved from Wave 1 stabilization into playground-first Wave 2. Do
 - Added schema-aware Monaco autocomplete with SQL keywords, snippets, tables, columns, qualified columns, aliases, and docs.
 - Added query history persisted to `localStorage`.
 - Added SQL formatter controls using `sql-formatter`.
+- Lazy-loaded `sql-formatter` so it no longer bloats the initial JS chunk.
+- Added query history search/filter and individual history item deletion.
 - Added Cmd/Ctrl+K command palette using `cmdk`.
 - Added Compare mode polish: node count differences, `Copy A to B`, `Swap A/B`.
 - Added and enabled music, employees, and social datasets with dataset-specific starter queries.
@@ -49,13 +51,11 @@ The project has moved from Wave 1 stabilization into playground-first Wave 2. Do
 2. Keep the newer package versions unless a dedicated dependency-stabilization pass is requested.
    - Current `package.json` has React 19, Vite 8, TypeScript 6, ESLint 10.
    - Original docs describe React 18, Vite 5, and stable TypeScript tooling.
-3. Consider a bundle-size pass: `sql-formatter` increased the main JS chunk, so lazy-load the formatter if initial load becomes a concern.
-4. Next playground polish candidates:
-   - Query history search/filter and individual history deletion.
+3. Next playground polish candidates:
    - Export results CSV/JSON.
    - Shareable query links.
    - More advanced plan hints and fit-to-view/pan behavior.
-5. Landing page and R3F hero remain after the playground feels complete.
+4. Landing page and R3F hero remain after the playground feels complete.
 
 ### Product direction
 Keep the project **tool-first**. The landing page should sell the playground later, not substitute for it. The query plan visualization remains the signature feature and should receive the highest quality bar.

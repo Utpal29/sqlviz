@@ -49,13 +49,15 @@
   - single-plan playback preserved,
   - visual side-by-side plan graphs in Compare,
   - diff rings for nodes present in only one compared plan.
+- Git initialized on branch `main` and a clean baseline commit was created.
+- `sql-formatter` is lazy-loaded; production build now splits it into a separate formatter chunk and no longer emits the >500 kB main chunk warning.
+- Query history now supports search/filter and individual item deletion.
 
 ## Current Next Priority Order
-1. Initialize git and commit the current clean baseline.
-2. Consider lazy-loading `sql-formatter`; the production build now warns that the main JS chunk exceeds 500 kB.
-3. Add query history search/filter and individual deletion.
-4. Add export CSV/JSON and shareable query links.
-5. Add more advanced plan hints plus fit-to-view/pan behavior.
+1. Commit post-baseline changes after each completed slice.
+2. Add export CSV/JSON and shareable query links.
+3. Add more advanced plan hints plus fit-to-view/pan behavior.
+4. Add full landing page/R3F only after the playground polish above.
 
 ## Guardrails
 - Keep local WASM loading. Do not revert to CDN sql.js.

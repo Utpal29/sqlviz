@@ -17,6 +17,7 @@ export interface QueryHistoryItem {
 interface HistoryStore {
   items: QueryHistoryItem[];
   addItem: (item: Omit<QueryHistoryItem, "id" | "timestamp">) => void;
+  deleteItem: (id: string) => void;
   clearHistory: () => void;
 }
 
@@ -53,6 +54,12 @@ export const useHistoryStore = create<HistoryStore>((set, get) => ({
       (existing) => existing.query !== trimmed || existing.dataset !== item.dataset
     );
     const next = [nextItem, ...deduped].slice(0, MAX_HISTORY);
+    saveHistory(next);
+    set({ items: next });
+  },
+
+  deleteItem: (id) => {
+    const next = get().items.filter((item) => item.id !== id);
     saveHistory(next);
     set({ items: next });
   },

@@ -35,21 +35,21 @@ export function CommandPalette() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  const run = (action: () => void) => {
-    action();
+  const run = (action: () => void | Promise<void>) => {
+    void action();
     setOpen(false);
   };
 
-  const formatActive = () => {
+  const formatActive = async () => {
     if (isCompareMode && activeBuffer === "compareB") {
-      setQueryB(formatSql(queryB));
+      setQueryB(await formatSql(queryB));
       return;
     }
     if (isCompareMode && activeBuffer === "compareA") {
-      setQueryA(formatSql(queryA));
+      setQueryA(await formatSql(queryA));
       return;
     }
-    setQuery(formatSql(query));
+    setQuery(await formatSql(query));
   };
 
   return (
