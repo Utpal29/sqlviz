@@ -1,9 +1,13 @@
-import { Database, RefreshCw } from "lucide-react";
+import { useState } from "react";
+import { Database, RefreshCw, Trophy } from "lucide-react";
 import { useDatabaseStore } from "../../store/databaseStore";
 import { useEditorStore } from "../../store/editorStore";
 import { useResultsStore } from "../../store/resultsStore";
 import { useCompareStore } from "../../store/compareStore";
+import { useChallengesStore } from "../../store/challengesStore";
 import { starterQueryForDataset } from "../../datasets/starters";
+import { ALL_CHALLENGES } from "../../challenges";
+import { ChallengeBrowser } from "../Challenges/ChallengeBrowser";
 import type { DatasetName } from "../../types/database";
 
 const DATASETS: Array<{
@@ -25,6 +29,11 @@ export function Header() {
   const setActiveTab = useResultsStore((s) => s.setActiveTab);
   const clearCompareRuns = useCompareStore((s) => s.clearRuns);
   const setCompareQueries = useCompareStore((s) => s.setQueries);
+  const challengeProgress = useChallengesStore((s) => s.progress);
+  const [challengeBrowserOpen, setChallengeBrowserOpen] = useState(false);
+  const completedChallenges = ALL_CHALLENGES.filter(
+    (c) => challengeProgress[c.id]?.completed,
+  ).length;
 
   const handleDatasetChange = (value: string) => {
     const next = value as DatasetName;
@@ -55,6 +64,18 @@ export function Header() {
         {status === "initializing" && (
           <RefreshCw size={14} className="animate-spin text-accent" />
         )}
+        <button
+          type="button"
+          onClick={() => setChallengeBrowserOpen(true)}
+          title="Browse SQL challenges"
+          className="flex items-center gap-1.5 rounded-md border border-border bg-bg-elevated px-2.5 py-1 text-xs text-text-muted transition-colors hover:border-border-glow hover:text-text-primary"
+        >
+          <Trophy size={13} />
+          <span>Challenges</span>
+          <span className="font-mono">
+            {completedChallenges}/{ALL_CHALLENGES.length}
+          </span>
+        </button>
         <label className="flex items-center gap-1.5 rounded-md border border-border bg-bg-elevated px-2.5 py-1 font-mono text-xs text-text-muted">
           <span>dataset:</span>
           <select
@@ -75,6 +96,7 @@ export function Header() {
           </select>
         </label>
       </div>
+      <ChallengeBrowser open={challengeBrowserOpen} onOpenChange={setChallengeBrowserOpen} />
     </header>
   );
 }

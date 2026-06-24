@@ -6,6 +6,8 @@ import { SQLEditor } from "../Editor/SQLEditor";
 import { EditorToolbar } from "../Editor/EditorToolbar";
 import { ResultsTabs } from "../Results/ResultsTabs";
 import { CommandPalette } from "../CommandPalette/CommandPalette";
+import { ChallengeBanner } from "../Challenges/ChallengeBanner";
+import { ChallengeComplete } from "../Challenges/ChallengeComplete";
 
 const MIN_SCHEMA_WIDTH = 208;
 const MAX_SCHEMA_WIDTH = 420;
@@ -67,6 +69,7 @@ export function AppShell() {
           className="w-1 cursor-col-resize border-x border-border/70 bg-bg-primary transition-colors hover:bg-accent/40"
         />
         <main className="flex flex-1 flex-col overflow-hidden">
+          <ChallengeBanner />
           <section
             className="flex min-h-0 flex-col"
             style={{ height: `${editorPercent}%` }}
@@ -91,6 +94,7 @@ export function AppShell() {
       </div>
       <StatusBar />
       <CommandPalette />
+      <ChallengeComplete />
     </div>
   );
 }
