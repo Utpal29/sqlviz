@@ -4,8 +4,6 @@
 
 SQLViz is a browser-based SQL playground that lets you write queries against sample datasets, see results instantly, and visualize how the query actually executes. It runs entirely client-side using SQLite compiled to WebAssembly — no backend, no accounts, works offline.
 
-Live: https://sqlviz.vercel.app
-
 ## Features
 
 - **Real SQLite in the browser** via sql.js (WASM)
@@ -41,11 +39,3 @@ npm run preview    # Preview the production build
 ```
 
 Open the URL Vite prints (default `http://127.0.0.1:5173/`). The landing page is at `/` and the playground is at `/play`.
-
-## Deployment
-
-Push to `main`. Vercel picks up the build automatically.
-
-## License
-
-MIT
