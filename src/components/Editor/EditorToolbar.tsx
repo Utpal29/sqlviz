@@ -207,6 +207,7 @@ export function EditorToolbar() {
           type="button"
           onClick={handleFormat}
           aria-label="Format SQL"
+          title="Format SQL (Cmd/Ctrl+S)"
           className="flex h-8 w-8 items-center justify-center rounded-md border border-border text-text-muted transition-colors hover:border-border-glow hover:bg-bg-elevated hover:text-text-primary"
         >
           <FileCode2 size={14} />
