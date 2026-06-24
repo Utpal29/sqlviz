@@ -1,9 +1,22 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Float, Icosahedron } from "@react-three/drei";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Mesh } from "three";
 import * as THREE from "three";
 import { useThemeStore } from "../../store/themeStore";
+
+function usePrefersReducedMotion(): boolean {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return undefined;
+    const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduced(mql.matches);
+    update();
+    mql.addEventListener("change", update);
+    return () => mql.removeEventListener("change", update);
+  }, []);
+  return reduced;
+}
 
 function mulberry32(seed: number): () => number {
   let a = seed;
@@ -32,8 +45,9 @@ function Constellation({ count = 90 }: { count?: number }) {
   }, [count]);
 
   const ref = useRef<THREE.Points>(null);
+  const reduced = usePrefersReducedMotion();
   useFrame((_, delta) => {
-    if (ref.current) ref.current.rotation.y += delta * 0.05;
+    if (!reduced && ref.current) ref.current.rotation.y += delta * 0.05;
   });
 
   return (
@@ -48,15 +62,20 @@ function Constellation({ count = 90 }: { count?: number }) {
 
 function CoreMesh() {
   const meshRef = useRef<Mesh>(null);
+  const reduced = usePrefersReducedMotion();
   useFrame((_, delta) => {
-    if (meshRef.current) {
+    if (!reduced && meshRef.current) {
       meshRef.current.rotation.x += delta * 0.15;
       meshRef.current.rotation.y += delta * 0.18;
     }
   });
 
   return (
-    <Float speed={1.2} rotationIntensity={0.4} floatIntensity={0.6}>
+    <Float
+      speed={reduced ? 0 : 1.2}
+      rotationIntensity={reduced ? 0 : 0.4}
+      floatIntensity={reduced ? 0 : 0.6}
+    >
       <Icosahedron ref={meshRef} args={[1.4, 1]}>
         <meshStandardMaterial
           color="#3B82F6"

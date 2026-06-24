@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="80%">
+      <stop offset="0%" stop-color="#1A2233" />
+      <stop offset="55%" stop-color="#0F1626" />
+      <stop offset="100%" stop-color="#06090F" />
+    </radialGradient>
+    <linearGradient id="accent" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#3B82F6" />
+      <stop offset="55%" stop-color="#06B6D4" />
+      <stop offset="100%" stop-color="#3B82F6" />
+    </linearGradient>
+    <linearGradient id="ring" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#3B82F6" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#06B6D4" stop-opacity="0.85" />
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="10" result="b" />
+      <feMerge>
+        <feMergeNode in="b" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)" />
+
+  <!-- Plan tree visualization on the right -->
+  <g transform="translate(770, 100)" font-family="JetBrains Mono, ui-monospace" filter="url(#glow)">
+    <!-- Root node -->
+    <g transform="translate(120, 0)">
+      <rect width="240" height="60" rx="12" fill="#1A2233" stroke="#3B82F6" stroke-width="2" />
+      <rect width="4" height="60" rx="2" fill="#3B82F6" />
+      <text x="16" y="22" font-size="11" font-weight="700" fill="#60A5FA" letter-spacing="0.08em">RESULT</text>
+      <text x="16" y="42" font-family="Inter" font-size="13" fill="#E2E8F0">Final result</text>
+    </g>
+
+    <!-- Edges -->
+    <path d="M 240 60 C 240 110, 110 110, 110 160" stroke="#A78BFA" stroke-width="2" fill="none" />
+    <path d="M 240 60 C 240 110, 370 110, 370 160" stroke="#67E8F9" stroke-width="2" fill="none" />
+    <path d="M 240 60 C 240 110, 240 110, 240 160" stroke="#FB923C" stroke-width="2" fill="none" />
+
+    <!-- SCAN -->
+    <g transform="translate(-10, 160)">
+      <rect width="240" height="60" rx="12" fill="#1A2233" stroke="#A78BFA" stroke-width="2" />
+      <rect width="4" height="60" rx="2" fill="#8B5CF6" />
+      <text x="16" y="22" font-size="11" font-weight="700" fill="#A78BFA" letter-spacing="0.08em">SCAN · EXPENSIVE</text>
+      <text x="16" y="42" font-family="Inter" font-size="13" fill="#E2E8F0">customers</text>
+      <text x="16" y="56" font-size="10" fill="#64748B">≈ 2.0k rows</text>
+    </g>
+
+    <!-- SORT -->
+    <g transform="translate(120, 160)">
+      <rect width="240" height="60" rx="12" fill="#1A2233" stroke="#FB923C" stroke-width="2" />
+      <rect width="4" height="60" rx="2" fill="#F97316" />
+      <text x="16" y="22" font-size="11" font-weight="700" fill="#FB923C" letter-spacing="0.08em">SORT · EXPENSIVE</text>
+      <text x="16" y="42" font-family="Inter" font-size="13" fill="#E2E8F0">temp B-tree</text>
+    </g>
+
+    <!-- SEARCH -->
+    <g transform="translate(250, 160)">
+      <rect width="240" height="60" rx="12" fill="#1A2233" stroke="#67E8F9" stroke-width="2" />
+      <rect width="4" height="60" rx="2" fill="#06B6D4" />
+      <text x="16" y="22" font-size="11" font-weight="700" fill="#67E8F9" letter-spacing="0.08em">SEARCH</text>
+      <text x="16" y="42" font-family="Inter" font-size="13" fill="#E2E8F0">orders</text>
+      <text x="16" y="56" font-size="10" fill="#64748B">via idx_orders_customer</text>
+    </g>
+  </g>
+
+  <!-- Title block on the left -->
+  <g transform="translate(80, 200)" font-family="Inter">
+    <text font-size="22" font-weight="700" letter-spacing="0.18em" fill="#06B6D4">SQLVIZ</text>
+    <text y="110" font-size="76" font-weight="800" fill="#E2E8F0">Write SQL.</text>
+    <text y="190" font-size="76" font-weight="800" fill="url(#accent)">See it run.</text>
+    <text y="270" font-size="76" font-weight="800" fill="#E2E8F0">Understand <tspan font-style="italic" fill="#60A5FA">why.</tspan></text>
+    <text y="330" font-size="22" fill="#94A3B8">An in-browser SQL playground with a step-through query plan visualizer.</text>
+  </g>
+
+  <!-- Bottom strip -->
+  <rect x="0" y="595" width="1200" height="2" fill="url(#ring)" />
+  <g transform="translate(80, 555)" font-family="JetBrains Mono, ui-monospace" font-size="14" fill="#64748B">
+    <text>sqlite · webassembly · zero backend</text>
+  </g>
+  <g transform="translate(1120, 555)" font-family="JetBrains Mono, ui-monospace" font-size="14" fill="#64748B" text-anchor="end">
+    <text>sqlviz.vercel.app</text>
+  </g>
+</svg>

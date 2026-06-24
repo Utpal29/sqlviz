@@ -55,6 +55,14 @@ export default function Landing() {
   const featuresRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) {
+      // Show everything immediately, no smooth-scroll, no reveals.
+      return undefined;
+    }
+
     const lenis = new Lenis({
       lerp: 0.1,
       smoothWheel: true,
@@ -100,6 +108,12 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-bg-primary text-text-primary">
+      <a
+        href="#features"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-accent focus:px-3 focus:py-1.5 focus:text-sm focus:font-medium focus:text-white"
+      >
+        Skip to content
+      </a>
       <header className="fixed inset-x-0 top-0 z-30 flex items-center justify-between border-b border-border/40 bg-bg-primary/70 px-6 py-3 backdrop-blur-md">
         <Link to="/" className="flex items-center gap-2">
           <div className="flex h-7 w-7 items-center justify-center rounded-md bg-accent/15 text-accent">
