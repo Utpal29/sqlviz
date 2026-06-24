@@ -5,7 +5,7 @@ import { useHistoryStore } from "./historyStore";
 import type { QueryResult } from "../types/database";
 import type { PlanNode } from "../types/plan";
 
-type Tab = "results" | "plan" | "compare";
+type Tab = "results" | "plan" | "tips" | "compare";
 
 interface ResultsStore {
   lastResult: QueryResult | null;
