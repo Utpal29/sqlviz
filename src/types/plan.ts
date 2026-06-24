@@ -6,7 +6,8 @@ export type PlanNodeType =
   | "join"
   | "subquery"
   | "compound"
-  | "cte";
+  | "cte"
+  | "root";
 
 export interface PlanNode {
   id: number;
@@ -16,6 +17,7 @@ export interface PlanNode {
   indexName?: string;
   isExpensive: boolean;
   hint?: string;
+  estimatedRows?: number;
   children: PlanNode[];
 }
 

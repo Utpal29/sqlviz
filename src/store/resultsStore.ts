@@ -11,14 +11,19 @@ interface ResultsStore {
   lastResult: QueryResult | null;
   lastPlan: PlanNode | null;
   activeTab: Tab;
+  selectedPlanNodeId: number | null;
   runQuery: (sql: string) => void;
   setActiveTab: (t: Tab) => void;
+  setSelectedPlanNodeId: (id: number | null) => void;
 }
 
 export const useResultsStore = create<ResultsStore>((set) => ({
   lastResult: null,
   lastPlan: null,
   activeTab: "results",
+  selectedPlanNodeId: null,
+
+  setSelectedPlanNodeId: (id) => set({ selectedPlanNodeId: id }),
 
   runQuery: (sql) => {
     const trimmed = sql.trim();
@@ -49,7 +54,7 @@ export const useResultsStore = create<ResultsStore>((set) => ({
         hasPlan: plan.tree != null,
       });
     }
-    set({ lastResult: result, lastPlan: plan.tree });
+    set({ lastResult: result, lastPlan: plan.tree, selectedPlanNodeId: null });
   },
 
   setActiveTab: (t) => set({ activeTab: t }),

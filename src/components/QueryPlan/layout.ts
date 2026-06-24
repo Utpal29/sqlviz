@@ -52,17 +52,28 @@ function layoutSubtree(node: PlanNode, depth: number, parentId: number | null): 
 
   let cursor = (myWidth - childrenTotal) / 2;
   const positions: NodeLayout[] = [];
+  const childCenters: number[] = [];
 
-  for (const st of childSubtrees) {
+  for (let i = 0; i < childSubtrees.length; i += 1) {
+    const st = childSubtrees[i];
+    const childNodeId = node.children[i].id;
     for (const p of st.positions) {
       positions.push({ ...p, x: p.x + cursor });
     }
+    const childRoot = positions.find((p) => p.id === childNodeId);
+    if (childRoot) childCenters.push(childRoot.x + childRoot.width / 2);
     cursor += st.width + H_GAP;
   }
 
+  const centerOfChildren =
+    childCenters.length > 0
+      ? (childCenters[0] + childCenters[childCenters.length - 1]) / 2
+      : myWidth / 2;
+  const parentX = centerOfChildren - NODE_W / 2;
+
   positions.push({
     id: node.id,
-    x: (myWidth - NODE_W) / 2,
+    x: parentX,
     y: depth * (NODE_H + V_GAP),
     width: NODE_W,
     height: NODE_H,

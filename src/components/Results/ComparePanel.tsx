@@ -14,6 +14,7 @@ const NODE_LABELS: Record<PlanNodeType, string> = {
   subquery: "SUBQUERY",
   compound: "COMPOUND",
   cte: "CTE",
+  root: "RESULT",
 };
 
 const COMPARE_TYPES: PlanNodeType[] = ["scan", "search", "sort"];

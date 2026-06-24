@@ -7,7 +7,15 @@ import { buildSocialSQL } from "../datasets/social";
 import { introspectSchema } from "./schemaIntrospector";
 import { parseExplain } from "./explainParser";
 import type { DatabaseSchema, DatasetName, QueryResult } from "../types/database";
-import type { ExplainResult, ExplainRow } from "../types/plan";
+import type { ExplainResult, ExplainRow, PlanNode } from "../types/plan";
+
+function annotateEstimatedRows(node: PlanNode, schema: DatabaseSchema | null): void {
+  if (schema && node.tableName && (node.type === "scan" || node.type === "search")) {
+    const table = schema.tables.find((t) => t.name === node.tableName);
+    if (table) node.estimatedRows = table.rowCount;
+  }
+  for (const child of node.children) annotateEstimatedRows(child, schema);
+}
 
 let SQL: SqlJsStatic | null = null;
 
@@ -109,7 +117,9 @@ export class DatabaseEngine {
         parent: row[1] as number,
         detail: row[3] as string,
       }));
-      return parseExplain(rows);
+      const parsed = parseExplain(rows);
+      if (parsed.tree) annotateEstimatedRows(parsed.tree, this._schema);
+      return parsed;
     } catch {
       return { raw: [], tree: null };
     }
