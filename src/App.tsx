@@ -4,6 +4,7 @@ import { useResultsStore } from "./store/resultsStore";
 import { useEditorStore } from "./store/editorStore";
 import { AppShell } from "./components/Layout/AppShell";
 import { DesktopGate } from "./components/Layout/DesktopGate";
+import { parseShareParams } from "./utils/shareUtils";
 
 function useIsDesktop() {
   const [isDesktop, setIsDesktop] = useState(
@@ -20,17 +21,25 @@ function useIsDesktop() {
 export default function App() {
   const status = useDatabaseStore((s) => s.status);
   const init = useDatabaseStore((s) => s.init);
+  const loadDataset = useDatabaseStore((s) => s.loadDataset);
   const error = useDatabaseStore((s) => s.errorMessage);
   const isDesktop = useIsDesktop();
 
   useEffect(() => {
-    if (status === "idle") {
-      void init().then(() => {
+    if (status !== "idle") return;
+    const shared = parseShareParams();
+    void (async () => {
+      if (shared) {
+        await loadDataset(shared.dataset);
+        useEditorStore.getState().setQuery(shared.query);
+        useResultsStore.getState().runQuery(shared.query);
+      } else {
+        await init();
         const q = useEditorStore.getState().query;
         useResultsStore.getState().runQuery(q);
-      });
-    }
-  }, [status, init]);
+      }
+    })();
+  }, [status, init, loadDataset]);
 
   if (!isDesktop) return <DesktopGate />;
 

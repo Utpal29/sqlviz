@@ -1,6 +1,8 @@
-import { ArrowDown, ArrowDownUp, ArrowUp } from "lucide-react";
+import { ArrowDown, ArrowDownUp, ArrowUp, Download } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useResultsStore } from "../../store/resultsStore";
+import { useDatabaseStore } from "../../store/databaseStore";
+import { downloadCsv, downloadJson } from "../../utils/exportUtils";
 import type { QueryResult } from "../../types/database";
 
 const PAGE_SIZE = 50;
@@ -37,6 +39,7 @@ function compareValues(a: unknown, b: unknown): number {
 
 export function ResultsTable() {
   const result = useResultsStore((s) => s.lastResult);
+  const dataset = useDatabaseStore((s) => s.currentDataset);
   const [tableState, setTableState] = useState<TableState>({
     result: null,
     page: 0,
@@ -102,8 +105,45 @@ export function ResultsTable() {
     });
   };
 
+  const exportFilename = (ext: string) => {
+    const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+    return `sqlviz-${dataset}-${stamp}.${ext}`;
+  };
+
+  const handleExportCsv = () => {
+    downloadCsv(exportFilename("csv"), result.columns, sortedRows);
+  };
+  const handleExportJson = () => {
+    downloadJson(exportFilename("json"), result.columns, sortedRows);
+  };
+
   return (
     <div className="flex h-full flex-col">
+      <div className="flex items-center justify-between border-b border-border/60 px-3 py-1.5 text-xs text-text-muted">
+        <span className="font-mono">
+          {sortedRows.length} row{sortedRows.length === 1 ? "" : "s"}
+        </span>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={handleExportCsv}
+            title="Download all sorted rows as CSV"
+            className="flex items-center gap-1 rounded-md border border-border px-2 py-1 transition-colors hover:border-border-glow hover:bg-bg-elevated hover:text-text-primary"
+          >
+            <Download size={12} />
+            CSV
+          </button>
+          <button
+            type="button"
+            onClick={handleExportJson}
+            title="Download all sorted rows as JSON"
+            className="flex items-center gap-1 rounded-md border border-border px-2 py-1 transition-colors hover:border-border-glow hover:bg-bg-elevated hover:text-text-primary"
+          >
+            <Download size={12} />
+            JSON
+          </button>
+        </div>
+      </div>
       <div className="flex-1 overflow-auto">
         <table className="w-full font-mono text-sm">
           <thead className="sticky top-0 bg-bg-secondary/95 backdrop-blur-md">

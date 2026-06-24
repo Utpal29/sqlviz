@@ -1,4 +1,4 @@
-import { Clock3, Columns2, FileCode2, Play, RotateCcw, Trash2, X } from "lucide-react";
+import { Check, Clock3, Columns2, FileCode2, Play, RotateCcw, Share2, Trash2, X } from "lucide-react";
 import { useState } from "react";
 import { useEditorStore } from "../../store/editorStore";
 import { useResultsStore } from "../../store/resultsStore";
@@ -6,6 +6,7 @@ import { useDatabaseStore } from "../../store/databaseStore";
 import { useCompareStore } from "../../store/compareStore";
 import { useHistoryStore } from "../../store/historyStore";
 import { formatSql } from "../../utils/sqlFormatter";
+import { buildShareUrl, copyToClipboard, writeShareParams } from "../../utils/shareUtils";
 
 export function EditorToolbar() {
   const query = useEditorStore((s) => s.query);
@@ -15,6 +16,8 @@ export function EditorToolbar() {
   const setActiveTab = useResultsStore((s) => s.setActiveTab);
   const resetDataset = useDatabaseStore((s) => s.resetDataset);
   const status = useDatabaseStore((s) => s.status);
+  const currentDataset = useDatabaseStore((s) => s.currentDataset);
+  const [shareCopied, setShareCopied] = useState(false);
   const isCompareMode = useCompareStore((s) => s.isCompareMode);
   const setCompareMode = useCompareStore((s) => s.setCompareMode);
   const runCompare = useCompareStore((s) => s.runCompare);
@@ -78,6 +81,17 @@ export function EditorToolbar() {
       // Keep the existing SQL unchanged if formatter cannot parse an in-progress query.
     }
     })();
+  };
+
+  const handleShare = () => {
+    if (isCompareMode) return;
+    const url = buildShareUrl(currentDataset, query);
+    writeShareParams(currentDataset, query);
+    void copyToClipboard(url).then((ok) => {
+      if (!ok) return;
+      setShareCopied(true);
+      window.setTimeout(() => setShareCopied(false), 1500);
+    });
   };
 
   const loadHistoryItem = (nextQuery: string) => {
@@ -179,6 +193,16 @@ export function EditorToolbar() {
             </div>
           )}
         </div>
+        <button
+          type="button"
+          onClick={handleShare}
+          disabled={isCompareMode}
+          aria-label="Copy shareable link"
+          title={isCompareMode ? "Disable Compare to share a link" : "Copy shareable link"}
+          className="flex h-8 w-8 items-center justify-center rounded-md border border-border text-text-muted transition-colors hover:border-border-glow hover:bg-bg-elevated hover:text-text-primary disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          {shareCopied ? <Check size={14} className="text-success" /> : <Share2 size={14} />}
+        </button>
         <button
           type="button"
           onClick={handleFormat}
