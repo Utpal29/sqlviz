@@ -1,73 +1,42 @@
-# React + TypeScript + Vite
+# SQLViz
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**The SQL playground that shows you the *why*.**
 
-Currently, two official plugins are available:
+SQLViz is a browser-based SQL playground that lets you write queries against sample datasets, see results instantly, and visualize how the query actually executes. It runs entirely client-side using SQLite compiled to WebAssembly — no backend, no accounts, works offline.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Live: https://sqlviz.vercel.app
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Real SQLite in the browser** via sql.js (WASM)
+- **Schema-aware Monaco editor** with autocomplete for tables, columns, qualified columns, and aliases
+- **Query plan visualization** — custom SVG tree of `EXPLAIN QUERY PLAN`, color-coded by node type, with step-through playback
+- **Compare mode** — run two queries side by side with diff rings on plan differences
+- **Multiple datasets** — e-commerce, music, employees, social
+- **Query history** persisted to localStorage with search and per-item delete
+- **Command palette** (Cmd/Ctrl+K)
+- **SQL formatter**, resizable panels, read-only safety, dataset reset
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+React + TypeScript, Vite, Tailwind CSS, Zustand, sql.js, Monaco Editor, Framer Motion, Radix UI, cmdk, sql-formatter.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Development
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev        # Vite dev server
+npm run build      # Production build
+npm run lint       # ESLint
+npm run preview    # Preview the production build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The playground lives at `/play`. Open `http://127.0.0.1:5173/` (or whichever port Vite picks) after `npm run dev`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Deployment
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Push to `main`. Vercel picks up the build automatically.
+
+## License
+
+MIT
