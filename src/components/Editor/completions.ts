@@ -4,6 +4,7 @@ import { useDatabaseStore } from "../../store/databaseStore";
 import type { ColumnInfo, DatabaseSchema, TableInfo } from "../../types/database";
 
 let completionProviderRegistered = false;
+let hoverProviderRegistered = false;
 
 const KEYWORDS = new Map([
   ["SELECT", "Read rows from one or more tables."],
@@ -184,6 +185,92 @@ function dedupeSuggestions(suggestions: Suggestion[]): Suggestion[] {
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
+  });
+}
+
+function tableHoverMarkdown(table: TableInfo): string {
+  const cols = table.columns
+    .map((c) => {
+      const flags: string[] = [];
+      if (c.isPrimaryKey) flags.push("PK");
+      if (c.isNotNull) flags.push("NOT NULL");
+      return `- \`${c.name}\` _${c.type}_${flags.length ? ` · ${flags.join(", ")}` : ""}`;
+    })
+    .join("\n");
+  const indexes = table.indexes.length
+    ? `\n\n**Indexes:** ${table.indexes.map((i) => `\`${i.name}\` (${i.columns.join(", ")})${i.isUnique ? " · unique" : ""}`).join(", ")}`
+    : "";
+  return `**Table \`${table.name}\`** — ${table.rowCount.toLocaleString()} rows\n\n${cols}${indexes}`;
+}
+
+function columnHoverMarkdown(table: TableInfo, column: ColumnInfo): string {
+  const flags: string[] = [];
+  if (column.isPrimaryKey) flags.push("primary key");
+  if (column.isNotNull) flags.push("not null");
+  if (column.defaultValue) flags.push(`default \`${column.defaultValue}\``);
+  return `**\`${table.name}.${column.name}\`** — _${column.type}_${flags.length ? `\n\n${flags.join(" · ")}` : ""}`;
+}
+
+export function registerSchemaHovers(monaco: Monaco): void {
+  if (hoverProviderRegistered) return;
+  hoverProviderRegistered = true;
+
+  monaco.languages.registerHoverProvider("sql", {
+    provideHover: (
+      model: MonacoEditor.editor.ITextModel,
+      position: MonacoEditor.Position,
+    ) => {
+      const schema = useDatabaseStore.getState().schema;
+      if (!schema) return null;
+      const word = model.getWordAtPosition(position);
+      if (!word) return null;
+      const range = new monaco.Range(
+        position.lineNumber,
+        word.startColumn,
+        position.lineNumber,
+        word.endColumn,
+      );
+      const tableByName = new Map(schema.tables.map((t) => [t.name.toLowerCase(), t]));
+      const sql = model.getValue();
+      const aliases = findAliases(sql, schema);
+      const aliasByName = new Map(aliases.map((a) => [a.alias.toLowerCase(), a.table]));
+      const target = word.word.toLowerCase();
+
+      // Qualified column?  look at character before the word.
+      const beforeText = model.getValueInRange({
+        startLineNumber: position.lineNumber,
+        startColumn: 1,
+        endLineNumber: position.lineNumber,
+        endColumn: word.startColumn,
+      });
+      const qualifiedMatch = beforeText.match(/([a-zA-Z_][\w]*)\.$/);
+      if (qualifiedMatch) {
+        const owner = qualifiedMatch[1].toLowerCase();
+        const ownerTable = aliasByName.get(owner) ?? tableByName.get(owner);
+        if (ownerTable) {
+          const col = ownerTable.columns.find((c) => c.name.toLowerCase() === target);
+          if (col) {
+            return {
+              range,
+              contents: [{ value: columnHoverMarkdown(ownerTable, col) }],
+            };
+          }
+        }
+      }
+
+      const table = tableByName.get(target);
+      if (table) {
+        return { range, contents: [{ value: tableHoverMarkdown(table) }] };
+      }
+
+      for (const t of schema.tables) {
+        const col = t.columns.find((c) => c.name.toLowerCase() === target);
+        if (col) {
+          return { range, contents: [{ value: columnHoverMarkdown(t, col) }] };
+        }
+      }
+      return null;
+    },
   });
 }
 
