@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Database, RefreshCw, Trophy } from "lucide-react";
+import { Database, Moon, RefreshCw, Sun, Trophy } from "lucide-react";
 import { useDatabaseStore } from "../../store/databaseStore";
 import { useEditorStore } from "../../store/editorStore";
 import { useResultsStore } from "../../store/resultsStore";
 import { useCompareStore } from "../../store/compareStore";
 import { useChallengesStore } from "../../store/challengesStore";
+import { useThemeStore } from "../../store/themeStore";
 import { starterQueryForDataset } from "../../datasets/starters";
 import { ALL_CHALLENGES } from "../../challenges";
 import { ChallengeBrowser } from "../Challenges/ChallengeBrowser";
@@ -30,6 +31,8 @@ export function Header() {
   const clearCompareRuns = useCompareStore((s) => s.clearRuns);
   const setCompareQueries = useCompareStore((s) => s.setQueries);
   const challengeProgress = useChallengesStore((s) => s.progress);
+  const themeMode = useThemeStore((s) => s.mode);
+  const toggleTheme = useThemeStore((s) => s.toggle);
   const [challengeBrowserOpen, setChallengeBrowserOpen] = useState(false);
   const completedChallenges = ALL_CHALLENGES.filter(
     (c) => challengeProgress[c.id]?.completed,
@@ -64,6 +67,15 @@ export function Header() {
         {status === "initializing" && (
           <RefreshCw size={14} className="animate-spin text-accent" />
         )}
+        <button
+          type="button"
+          onClick={toggleTheme}
+          aria-label={themeMode === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+          title={themeMode === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+          className="flex h-8 w-8 items-center justify-center rounded-md border border-border bg-bg-elevated text-text-muted transition-colors hover:border-border-glow hover:text-text-primary"
+        >
+          {themeMode === "dark" ? <Sun size={13} /> : <Moon size={13} />}
+        </button>
         <button
           type="button"
           onClick={() => setChallengeBrowserOpen(true)}

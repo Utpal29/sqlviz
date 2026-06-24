@@ -102,24 +102,29 @@ export function ERDiagram({ open, onOpenChange }: ERDiagramProps) {
                           width={tableLayout.width}
                           height={tableLayout.height}
                           rx={10}
-                          fill="rgba(26,34,51,0.95)"
-                          stroke="#1E293B"
+                          fill="rgb(var(--plan-surface) / 0.95)"
+                          stroke="rgb(var(--border))"
                           strokeWidth={1}
                         />
                         <rect
                           width={tableLayout.width}
                           height={36}
                           rx={10}
-                          fill="rgba(59,130,246,0.18)"
+                          fill="rgb(var(--accent) / 0.18)"
                         />
-                        <rect width={tableLayout.width} height={36 - 10} y={10} fill="rgba(59,130,246,0.18)" />
+                        <rect
+                          width={tableLayout.width}
+                          height={36 - 10}
+                          y={10}
+                          fill="rgb(var(--accent) / 0.18)"
+                        />
                         <text
                           x={14}
                           y={23}
                           fontFamily="Inter"
                           fontWeight="600"
                           fontSize="13"
-                          fill="#E2E8F0"
+                          fill="rgb(var(--text-primary))"
                         >
                           {table.name}
                         </text>
@@ -128,7 +133,7 @@ export function ERDiagram({ open, onOpenChange }: ERDiagramProps) {
                           y={23}
                           fontFamily="JetBrains Mono"
                           fontSize="10"
-                          fill="#64748B"
+                          fill="rgb(var(--text-muted))"
                           textAnchor="end"
                         >
                           {table.rowCount.toLocaleString()} rows
@@ -152,7 +157,7 @@ export function ERDiagram({ open, onOpenChange }: ERDiagramProps) {
                                 y={y}
                                 fontFamily="JetBrains Mono"
                                 fontSize="10"
-                                fill="#64748B"
+                                fill="rgb(var(--text-muted))"
                                 textAnchor="end"
                               >
                                 {c.type}

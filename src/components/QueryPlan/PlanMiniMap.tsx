@@ -102,7 +102,7 @@ export function PlanMiniMap({ layout, scrollRef, zoom, activeNodeId, selectedId 
           onPointerCancel={onPointerUp}
           style={{ cursor: "crosshair", display: "block" }}
         >
-          <rect width={contentW} height={contentH} fill="rgba(15,23,42,0.5)" />
+          <rect width={contentW} height={contentH} fill="rgb(var(--plan-surface-muted) / 0.5)" />
           <g transform={`translate(${CANVAS_PADDING * zoom}, ${CANVAS_PADDING * zoom})`}>
             {layout.nodes.map((n) => {
               const color = NODE_COLORS[n.node.type];
@@ -118,7 +118,7 @@ export function PlanMiniMap({ layout, scrollRef, zoom, activeNodeId, selectedId 
                   rx={6 * zoom}
                   fill={color.fill}
                   fillOpacity={active || selected ? 1 : 0.7}
-                  stroke={selected ? "#E2E8F0" : "none"}
+                  stroke={selected ? "rgb(var(--text-primary))" : "none"}
                   strokeWidth={3}
                 />
               );

@@ -81,7 +81,7 @@ export function PlanCanvas({
             <motion.path
               key={`edge-${node.id}`}
               d={edgePath(parent, node)}
-              stroke={complete ? color.stroke : "#334155"}
+              stroke={complete ? color.stroke : "rgb(var(--plan-stroke))"}
               strokeWidth={active ? 2.5 : 1.5}
               fill="none"
               initial={{ pathLength: 0, opacity: 0 }}
@@ -147,9 +147,17 @@ export function PlanCanvas({
                   width={node.width}
                   height={node.height}
                   rx={12}
-                  fill={active ? "rgba(59,130,246,0.16)" : "rgba(26,34,51,0.85)"}
+                  fill={
+                    active
+                      ? "rgb(var(--accent) / 0.16)"
+                      : "rgb(var(--plan-surface) / 0.95)"
+                  }
                   stroke={
-                    active || selected ? color.stroke : complete ? "#334155" : "#1E293B"
+                    active || selected
+                      ? color.stroke
+                      : complete
+                        ? "rgb(var(--plan-stroke))"
+                        : "rgb(var(--border))"
                   }
                   strokeWidth={active ? 2.5 : selected ? 2 : 1}
                   filter={node.node.isExpensive && !isRoot || active ? "url(#glow)" : undefined}
@@ -180,7 +188,7 @@ export function PlanCanvas({
                   fontFamily="Inter"
                   fontSize="13"
                   fontWeight="500"
-                  fill="#E2E8F0"
+                  fill="rgb(var(--text-primary))"
                 >
                   {truncateLabel(primaryLabel, 26)}
                 </text>
@@ -190,7 +198,7 @@ export function PlanCanvas({
                     y={56}
                     fontFamily="JetBrains Mono"
                     fontSize="10"
-                    fill="#64748B"
+                    fill="rgb(var(--text-muted))"
                   >
                     {truncateLabel(secondaryLabel, 30)}
                   </text>
